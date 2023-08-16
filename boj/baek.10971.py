@@ -1,37 +1,29 @@
 
-# 이해x
-
 import sys
 
-def dfs(start, now, value, cnt):
+def dfs(start, now, cost):
     global result
-    if cnt == n:
-        if l[now][start]:
-            value += l[now][start]
-            if result > value:
-                result = value
+    # 모든 도시를 돌았고 다시 원점으로 돌아온다면
+    if start == now and all(visited):
+        # 비용과 결과값 중 작은 값을 저장
+        result = min(result, cost)
         return
-
-    if value > result:
-        return
-    
-    for i in range(n):
-        if not visited[i] and l[now][i]:
-            visited[i] = 1
-            dfs(start, i, value + l[now][i], cnt +1)
-            visited[i] = 0
+    else:
+        for next in range(n):
+            # 다음 노드의 값이 0이거나 방문하지 않았을 경우
+            if map[now][next] > 0 and not visited[next]:
+                # 방문을 표시
+                visited[next] = True
+                # 다시 dfs 탐색
+                dfs(start, next, cost+map[now][next])
+                # 방문을 해제
+                visited[next] = False
 
 n = int(input())
-
-l = [list(map(int, input().split())) for _ in range(n)]
-
+map = [list(map(int, input().split())) for i in range(4)]
+visited = [0]*n
 result = sys.maxsize
 
-visited = [0] * n
-
-for i in range(n):
-    visited[i] = 1
-    dfs(i, i, 0, 1)
-    visited[i] = 0
+dfs(0, 0, 0)
 
 print(result)
